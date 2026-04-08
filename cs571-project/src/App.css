@@ -1,0 +1,13 @@
+.map-placeholder {
+  height: 500px;
+  background-color: #e9ecef;
+}
+
+.route-filter {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.bus-detail-card {
+  min-height: 150px;
+}
