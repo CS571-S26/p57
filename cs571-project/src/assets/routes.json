@@ -1,0 +1,205 @@
+[
+  {
+    "id": "28",
+    "shortName": "28",
+    "longName": "Route 28",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "38",
+    "shortName": "38",
+    "longName": "Route 38",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "55",
+    "shortName": "55",
+    "longName": "Route 55",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "60",
+    "shortName": "60",
+    "longName": "East Washington Extras",
+    "color": "#520298",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "61",
+    "shortName": "61",
+    "longName": "Pflaum Extras",
+    "color": "#951F20",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "62",
+    "shortName": "62",
+    "longName": "Gammon Extras",
+    "color": "#025806",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "63",
+    "shortName": "63",
+    "longName": "Regent Extras",
+    "color": "#2E3192",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "64",
+    "shortName": "64",
+    "longName": "Regent Extras",
+    "color": "#8F9092",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "65",
+    "shortName": "65",
+    "longName": "Route 65",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "75",
+    "shortName": "75",
+    "longName": "Route 75",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "80",
+    "shortName": "80",
+    "longName": "Route 80",
+    "color": "#2272B5",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "81",
+    "shortName": "81",
+    "longName": "Route 81",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "82",
+    "shortName": "82",
+    "longName": "Route 82",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "84",
+    "shortName": "84",
+    "longName": "Route 84",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "A",
+    "shortName": "A",
+    "longName": "Rapid Route A",
+    "color": "#EE3325",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "B",
+    "shortName": "B",
+    "longName": "Route B",
+    "color": "#80BC00",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "C",
+    "shortName": "C",
+    "longName": "Route C",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "D",
+    "shortName": "D",
+    "longName": "Route D",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "E",
+    "shortName": "E",
+    "longName": "Route E",
+    "color": "#2272B5",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "F",
+    "shortName": "F",
+    "longName": "Route F",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "G",
+    "shortName": "G",
+    "longName": "Route G",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "H",
+    "shortName": "H",
+    "longName": "Route H",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "J",
+    "shortName": "J",
+    "longName": "Route J",
+    "color": "#2272B5",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "L",
+    "shortName": "L",
+    "longName": "Route L",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "O",
+    "shortName": "O",
+    "longName": "Route O",
+    "color": "#2272B5",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "P",
+    "shortName": "P",
+    "longName": "Route P",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "R",
+    "shortName": "R",
+    "longName": "Route R",
+    "color": "#333366",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "S",
+    "shortName": "S",
+    "longName": "Route S",
+    "color": "#2272B5",
+    "textColor": "#FFFFFF"
+  },
+  {
+    "id": "W",
+    "shortName": "W",
+    "longName": "Route W",
+    "color": "#46AAD1",
+    "textColor": "#FFFFFF"
+  }
+]

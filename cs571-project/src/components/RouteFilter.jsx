@@ -1,51 +1,55 @@
 import { useState } from 'react';
-import { Form, ListGroup } from 'react-bootstrap';
+import { getRoutes } from '../services/metroTransitApi';
 
-const SAMPLE_ROUTES = [
-  { id: '01', name: 'A — Villager' },
-  { id: '02', name: 'B — Crosstown' },
-  { id: '03', name: 'C — Southtown' },
-  { id: '04', name: 'D — East Transfer Point' },
-  { id: '05', name: 'E — West Side' },
-  { id: '06', name: 'F — Middleton – West Towne' },
-  { id: '10', name: 'Route 10 — Inner Loop' },
-  { id: '28', name: 'Route 28 — Campus Circulator' },
-  { id: '80', name: 'Route 80 — Campus Shuttle' },
-];
+const routes = getRoutes();
 
 function RouteFilter({ selectedRoute, onSelectRoute }) {
   const [filter, setFilter] = useState('');
 
-  const filtered = SAMPLE_ROUTES.filter((r) =>
-    r.name.toLowerCase().includes(filter.toLowerCase())
+  const filtered = routes.filter(
+    (r) =>
+      r.shortName.toLowerCase().includes(filter.toLowerCase()) ||
+      r.longName.toLowerCase().includes(filter.toLowerCase()),
   );
 
   return (
-    <div className="route-filter">
-      <Form.Control
+    <div className="space-y-2">
+      <input
         type="text"
         placeholder="Filter routes..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className="mb-2"
+        className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-madison-red/40 dark:text-white placeholder-gray-400"
+        aria-label="Filter bus routes"
       />
-      <ListGroup>
+      <ul className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
         {filtered.map((route) => (
-          <ListGroup.Item
-            key={route.id}
-            action
-            active={selectedRoute === route.id}
-            onClick={() => onSelectRoute(route.id)}
-          >
-            {route.name}
-          </ListGroup.Item>
+          <li key={route.id}>
+            <button
+              onClick={() => onSelectRoute(route.id)}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
+                selectedRoute === route.id
+                  ? 'bg-madison-red text-white'
+                  : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              <span
+                className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-xs font-bold text-white"
+                style={{
+                  backgroundColor:
+                    selectedRoute === route.id ? '#fff3' : route.color,
+                }}
+              >
+                {route.shortName}
+              </span>
+              <span className="truncate">{route.longName}</span>
+            </button>
+          </li>
         ))}
         {filtered.length === 0 && (
-          <ListGroup.Item disabled className="text-muted">
-            No routes match your filter.
-          </ListGroup.Item>
+          <li className="text-sm text-gray-400 px-3 py-2">No routes match.</li>
         )}
-      </ListGroup>
+      </ul>
     </div>
   );
 }
