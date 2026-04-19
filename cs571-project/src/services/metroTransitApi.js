@@ -1,5 +1,6 @@
 import routesData from '../assets/routes.json';
 import stopsData from '../assets/stops.json';
+import { getMockVehicles } from './mockVehicles';
 
 // ---------------------------------------------------------------------------
 // Madison Metro GTFS-RT endpoints
@@ -63,27 +64,33 @@ export async function fetchVehiclePositions() {
   try {
     const res = await fetch(`${GTFS_RT_BASE}/vehicles`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    // Normalize the GTFS-RT feed into a flat array
+    const text = await res.text();
+    // BusTime sometimes returns "ERROR: ..." with HTTP 200 — treat as failure
+    if (!text || text.startsWith('ERROR')) throw new Error('upstream BusTime error');
+    const data = JSON.parse(text);
     const entities = data.entity || data.entities || data || [];
-    return entities.map((e) => {
-      const vp = e.vehicle || e;
-      const pos = vp.position || {};
-      const trip = vp.trip || {};
-      return {
-        vehicleId: vp.vehicle?.id || e.id,
-        routeId: trip.routeId || trip.route_id || '',
-        lat: pos.latitude,
-        lng: pos.longitude,
-        bearing: pos.bearing || 0,
-        speed: pos.speed || 0,
-        timestamp: vp.timestamp || null,
-        occupancy: vp.occupancyStatus || vp.occupancy_status || null,
-      };
-    });
+    const parsed = entities
+      .map((e) => {
+        const vp = e.vehicle || e;
+        const pos = vp.position || {};
+        const trip = vp.trip || {};
+        return {
+          vehicleId: vp.vehicle?.id || e.id,
+          routeId: trip.routeId || trip.route_id || '',
+          lat: pos.latitude,
+          lng: pos.longitude,
+          bearing: pos.bearing || 0,
+          speed: pos.speed || 0,
+          timestamp: vp.timestamp || null,
+          occupancy: vp.occupancyStatus || vp.occupancy_status || null,
+        };
+      })
+      .filter((v) => Number.isFinite(v.lat) && Number.isFinite(v.lng));
+    if (parsed.length === 0) throw new Error('empty feed');
+    return parsed;
   } catch {
-    // Return empty on failure — the UI should show a status indicator
-    return [];
+    // Fall back to simulated vehicles so the UI stays useful when the feed is down
+    return getMockVehicles();
   }
 }
 

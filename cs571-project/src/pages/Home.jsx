@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import MapContainer from '../components/MapContainer';
+import Map3D from '../components/Map3D';
+import BusFollowView from '../components/BusFollowView';
 import SearchBar from '../components/SearchBar';
 import QuickButtons from '../components/QuickButtons';
 import BusDetailCard from '../components/BusDetailCard';
@@ -17,6 +19,8 @@ function Home() {
   const [currentStop, setCurrentStop] = useState(null);
   const [tripFrom, setTripFrom] = useState(null);
   const [tripTo, setTripTo] = useState(null);
+  const [view3D, setView3D] = useState(false);
+  const [followBus, setFollowBus] = useState(null);
 
   const handleSelectStop = (stop) => {
     selectStop(stop);
@@ -53,6 +57,18 @@ function Home() {
       eta: bus.eta,
       occupancy: bus.occupancy || 'Unknown',
       direction: bus.direction || 'In service',
+    });
+  };
+
+  // Bus clicked in the 3D view — open the follow modal and update the side card
+  const handleSelect3DBus = (vehicle) => {
+    setFollowBus(vehicle);
+    setSelectedBus({
+      route: vehicle.routeId,
+      nextStop: 'Live tracking',
+      eta: null,
+      occupancy: vehicle.occupancy || 'Unknown',
+      direction: 'In service',
     });
   };
 
@@ -109,14 +125,39 @@ function Home() {
 
       {/* Map */}
       <main className="flex-1 relative">
-        <MapContainer
-          selectedRoute={selectedRoute}
-          onSelectBus={handleSelectBus}
-          tripFromStop={tripFrom}
-          tripToStop={tripTo}
-          onClearRoute={selectedRoute ? handleClear : null}
-          className="h-full"
-        />
+        {view3D ? (
+          <Map3D
+            selectedRoute={selectedRoute}
+            onSelectBus={handleSelect3DBus}
+            className="h-full"
+          />
+        ) : (
+          <MapContainer
+            selectedRoute={selectedRoute}
+            onSelectBus={handleSelectBus}
+            tripFromStop={tripFrom}
+            tripToStop={tripTo}
+            onClearRoute={selectedRoute ? handleClear : null}
+            className="h-full"
+          />
+        )}
+
+        {/* 2D / 3D toggle */}
+        <button
+          onClick={() => setView3D((v) => !v)}
+          className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-600"
+          aria-label={view3D ? 'Switch to 2D map' : 'Switch to 3D map'}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10" />
+          </svg>
+          {view3D ? '2D' : '3D'}
+        </button>
+
+        {/* Bus follow modal — only when 3D and a bus is selected */}
+        {followBus && (
+          <BusFollowView vehicle={followBus} onClose={() => setFollowBus(null)} />
+        )}
 
         {/* Floating search */}
         <div className="absolute top-4 left-4 right-4 lg:right-auto lg:w-96 z-10">
