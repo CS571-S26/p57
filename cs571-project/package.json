@@ -16,6 +16,7 @@
     "@deck.gl/core": "^9.3.1",
     "@deck.gl/layers": "^9.3.1",
     "@deck.gl/mapbox": "^9.3.1",
+    "@deck.gl/mesh-layers": "^9.3.1",
     "@tailwindcss/vite": "^4.2.2",
     "leaflet": "^1.9.4",
     "maplibre-gl": "^5.23.0",

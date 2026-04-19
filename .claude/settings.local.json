@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(npm ls *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\steph\\OneDrive\\UWMADISON\\Classes\\Spring26\\CS571\\p57\\cs571-project\\src"

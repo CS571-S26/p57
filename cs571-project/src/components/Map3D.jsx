@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import { IconLayer } from '@deck.gl/layers';
+import { ScenegraphLayer } from '@deck.gl/mesh-layers';
 import { getRoutes } from '../services/metroTransitApi';
 import { useTheme } from '../context/ThemeContext';
 import { useInterpolatedVehicles } from '../hooks/useInterpolatedVehicles';
@@ -17,15 +18,15 @@ const MADISON_CENTER = [-89.4012, 43.0731]; // [lng, lat] for MapLibre
 const LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 const DARK_STYLE = LIGHT_STYLE;
 
+// glTF model used for the 3D vehicle. Khronos sample model — single-file GLB
+// with embedded textures, reliably hosted. Swap this URL for any other glTF
+// (e.g. a custom bus model) without changing the rest of the code.
+const VEHICLE_MODEL_URL =
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMilkTruck/glTF-Binary/CesiumMilkTruck.glb';
+
 const routeColorMap = Object.fromEntries(
   getRoutes().map((r) => [r.id, r.color]),
 );
-
-function hexToRgb(hex) {
-  const v = hex.replace('#', '');
-  const n = parseInt(v.length === 3 ? v.split('').map((c) => c + c).join('') : v, 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
 
 function makeBusIconUrl(color, label) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
@@ -163,30 +164,47 @@ function Map3D({
     mapRef.current.jumpTo({ center: [v.lng, v.lat] });
   }, [vehicles, followVehicleId]);
 
-  // Update deck.gl bus layer
+  // Update deck.gl bus layers (3D scenegraph model + floating route label icon)
   useEffect(() => {
     if (!overlayRef.current) return;
     const visible = selectedRoute
       ? vehicles.filter((v) => v.routeId === selectedRoute)
       : vehicles;
-    const layer = new IconLayer({
-      id: 'buses',
+
+    // 3D vehicle model — oriented along its bearing
+    const vehiclesLayer = new ScenegraphLayer({
+      id: 'buses-3d',
       data: visible,
+      scenegraph: VEHICLE_MODEL_URL,
       pickable: true,
+      sizeScale: 8,
+      _lighting: 'pbr',
+      getPosition: (d) => [d.lng, d.lat, 0],
+      // Orientation: [pitch, yaw, roll] in degrees. The model's forward axis
+      // is +X, so yaw = (90 - bearing) to align with compass heading.
+      getOrientation: (d) => [0, 90 - (d.bearing || 0), 90],
+      onClick: ({ object }) => object && onSelectBus?.(object),
+    });
+
+    // Floating route label above each bus so you can identify them at a glance
+    const labelsLayer = new IconLayer({
+      id: 'bus-labels',
+      data: visible,
+      pickable: false,
       sizeUnits: 'pixels',
       getIcon: (d) => ({
         url: makeBusIconUrl(routeColorMap[d.routeId] || '#666', d.routeId || '?'),
         width: 64,
         height: 64,
-        anchorY: 32,
+        anchorY: 64,
       }),
-      getPosition: (d) => [d.lng, d.lat, 30],
-      getSize: 38,
-      getColor: (d) => [...hexToRgb(routeColorMap[d.routeId] || '#666666'), 255],
-      onClick: ({ object }) => object && onSelectBus?.(object),
+      getPosition: (d) => [d.lng, d.lat, 25],
+      getSize: 28,
+      getColor: () => [255, 255, 255, 255],
       updateTriggers: { getIcon: [selectedRoute] },
     });
-    overlayRef.current.setProps({ layers: [layer] });
+
+    overlayRef.current.setProps({ layers: [vehiclesLayer, labelsLayer] });
   }, [vehicles, selectedRoute, onSelectBus]);
 
   return (
