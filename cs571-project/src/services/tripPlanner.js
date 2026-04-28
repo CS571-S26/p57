@@ -18,7 +18,6 @@ const TOP_N = 3;                     // how many candidate plans to surface
 // Lookups (built once)
 // ---------------------------------------------------------------------------
 const stopById = Object.fromEntries(stopsData.map((s) => [s.id, s]));
-const routeById = Object.fromEntries(routesData.map((r) => [r.id, r]));
 
 // Madison Metro is hub-and-spoke. When no direct route exists between two
 // stops, we suggest planning via one of the four transfer points. Pre-filter

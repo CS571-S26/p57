@@ -1,9 +1,13 @@
+/* eslint-disable react-refresh/only-export-components */
+// `getSegmentCoords` is exported alongside the memoized component for reuse
+// elsewhere; HMR fast-refresh limitation only affects dev workflow.
 import { memo, useMemo } from 'react';
 import { Polyline, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { useEffect } from 'react';
 import L from 'leaflet';
 import shapesData from '../assets/shapes.json';
 import stopsData from '../assets/stops.json';
+import StopPopupContent from './StopPopupContent';
 
 const stopsById = Object.fromEntries(stopsData.map((s) => [s.id, s]));
 
@@ -142,39 +146,18 @@ const RouteOverlay = memo(function RouteOverlay({
             }}
           >
             <Popup>
-              <div className="text-sm">
-                <strong>{stop.name}</strong>
-                {isEndpoint && (
-                  <span className="block text-xs text-gray-500 mt-0.5">
-                    {stop.id === fromStopId ? 'Board here' : 'Get off here'}
-                  </span>
-                )}
-                <span className="block text-xs text-gray-400 mt-0.5">
-                  Stop {idx + 1} of {routeStops.length}
-                </span>
-                {onSelectStop && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectStop(stop);
-                    }}
-                    style={{
-                      marginTop: 6,
-                      padding: '2px 6px',
-                      background: '#c5050c',
-                      color: '#fff',
-                      border: 0,
-                      borderRadius: 4,
-                      fontSize: 11,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Plan trip to here
-                  </button>
-                )}
-              </div>
+              <StopPopupContent
+                stop={stop}
+                onSelectStop={onSelectStop}
+                endpointHint={
+                  isEndpoint
+                    ? stop.id === fromStopId
+                      ? 'Board here'
+                      : 'Get off here'
+                    : null
+                }
+                hint={`Stop ${idx + 1} of ${routeStops.length}`}
+              />
             </Popup>
           </CircleMarker>
         );

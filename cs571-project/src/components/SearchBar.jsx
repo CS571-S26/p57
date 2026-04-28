@@ -7,6 +7,9 @@ function SearchBar({ onSelectStop }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const wrapperRef = useRef(null);
 
+  // Derive search suggestions from the query. Setting state in an effect
+  // here is the correct pattern: we're synchronizing UI to a prop-like input.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (query.trim().length >= 2) {
       setSuggestions(searchStops(query));
@@ -16,6 +19,7 @@ function SearchBar({ onSelectStop }) {
       setShowDropdown(false);
     }
   }, [query]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -73,7 +77,7 @@ function SearchBar({ onSelectStop }) {
                 className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex justify-between items-center"
               >
                 <span className="font-medium dark:text-white">{stop.name}</span>
-                <span className="text-xs text-gray-400">{stop.routes.join(', ')}</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">{stop.routes.join(', ')}</span>
               </button>
             </li>
           ))}

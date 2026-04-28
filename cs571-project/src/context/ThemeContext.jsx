@@ -1,3 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
+// Provider + hook colocated by design — HMR fast-refresh limitation only
+// affects dev workflow, not production. Keeping them together is the
+// idiomatic React Context pattern.
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext(null);

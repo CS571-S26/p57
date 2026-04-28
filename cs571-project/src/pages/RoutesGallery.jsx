@@ -24,9 +24,9 @@ function RoutesGallery() {
   );
 
   // When a route is expanded, fetch live arrivals from the GTFS-RT trips feed.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     if (!expandedRoute) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setArrivals([]);
       return;
     }
@@ -169,9 +169,9 @@ function RoutesGallery() {
 
                   {view === 'live' ? (
                     <>
-                      <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                      <h2 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
                         Next arrivals
-                      </h3>
+                      </h2>
                       {loadingArrivals ? (
                         <p className="text-sm text-gray-600 dark:text-gray-400 py-2">
                           Loading live arrivals…
@@ -188,9 +188,9 @@ function RoutesGallery() {
                     <ScheduleTable routeId={route.id} />
                   )}
 
-                  <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mt-4 mb-2">
+                  <h2 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mt-4 mb-2">
                     {stops.length} stop{stops.length !== 1 ? 's' : ''} on this route
-                  </h3>
+                  </h2>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 list-none p-0">
                     {stops.map((stop) => (
                       <li

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MapContainer from '../components/MapContainer';
 import Map3D from '../components/Map3D';
 import BusFollowView from '../components/BusFollowView';
@@ -19,6 +20,7 @@ import {
   getDirectionLabel,
   getNextScheduled,
   formatTimeOfDay,
+  getStopById,
 } from '../services/metroTransitApi';
 import shapesData from '../assets/shapes.json';
 
@@ -33,6 +35,8 @@ function Home() {
   const [view3D, setView3D] = useState(false);
   const [followBus, setFollowBus] = useState(null);
   const { location: userLocation, status: locationStatus, request: requestLocation } = useUserLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const handledDeepLinkRef = useRef(false);
 
   const handleSelectStop = async (stop) => {
     selectStop(stop);
@@ -102,6 +106,24 @@ function Home() {
       // Live ETAs unavailable — placeholders remain; not a blocking failure.
     }
   };
+
+  // Deep link: `#/?stop=2847` opens the app pre-targeted at that stop.
+  // Consumes the param after firing so subsequent navigations don't re-trigger.
+  useEffect(() => {
+    if (handledDeepLinkRef.current) return;
+    const stopId = searchParams.get('stop');
+    if (!stopId) return;
+    const stop = getStopById(stopId);
+    if (stop) {
+      handledDeepLinkRef.current = true;
+      handleSelectStop(stop);
+      // Clear the param so deep-linked URLs don't fire repeatedly on re-render
+      const next = new URLSearchParams(searchParams);
+      next.delete('stop');
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleSelectBus = (bus) => {
     setSelectedBus({
@@ -323,7 +345,7 @@ function Home() {
                   <details className="group">
                     <summary className="cursor-pointer text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider list-none flex items-center justify-between">
                       <span>All routes serving this stop</span>
-                      <span aria-hidden="true" className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+                      <span aria-hidden="true" className="text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform">▾</span>
                     </summary>
                     <div className="space-y-1.5 mt-2">
                   {stopRoutes.map((bus) => (

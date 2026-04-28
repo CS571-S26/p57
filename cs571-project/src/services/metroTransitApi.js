@@ -89,6 +89,12 @@ export function searchStops(query, limit = 10) {
     .slice(0, limit);
 }
 
+/** Direct lookup by stop ID. Used for deep links like `#/?stop=2847`. */
+export function getStopById(stopId) {
+  if (stopId == null) return null;
+  return stopsData.find((s) => s.id === String(stopId)) || null;
+}
+
 export function getRoutesForStop(stopId) {
   const stop = stopsData.find((s) => s.id === stopId);
   if (!stop) return [];

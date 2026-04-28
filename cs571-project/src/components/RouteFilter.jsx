@@ -47,7 +47,7 @@ function RouteFilter({ selectedRoute, onSelectRoute }) {
           </li>
         ))}
         {filtered.length === 0 && (
-          <li className="text-sm text-gray-400 px-3 py-2">No routes match.</li>
+          <li className="text-sm text-gray-600 dark:text-gray-400 px-3 py-2">No routes match.</li>
         )}
       </ul>
     </div>

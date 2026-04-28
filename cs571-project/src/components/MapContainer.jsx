@@ -12,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import { getStops, getRoutes, getDirectionShort } from '../services/metroTransitApi';
 import { useTheme } from '../context/ThemeContext';
 import RouteOverlay from './RouteOverlay';
+import StopPopupContent from './StopPopupContent';
 import { closestPerDirection } from '../utils/geo';
 import { useInterpolatedVehicles } from '../hooks/useInterpolatedVehicles';
 
@@ -169,34 +170,11 @@ function MapContainer({
                 }}
               >
                 <Popup>
-                  <strong>{stop.name}</strong>
-                  <br />
-                  <small>Routes: {stop.routes.join(', ')}</small>
-                  {onSelectStop && (
-                    <>
-                      <br />
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectStop(stop);
-                        }}
-                        style={{
-                          marginTop: 4,
-                          padding: '2px 6px',
-                          background: '#c5050c',
-                          color: '#fff',
-                          border: 0,
-                          borderRadius: 4,
-                          fontSize: 11,
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Plan trip to here
-                      </button>
-                    </>
-                  )}
+                  <StopPopupContent
+                    stop={stop}
+                    onSelectStop={onSelectStop}
+                    hint={`Routes: ${stop.routes.join(', ')}`}
+                  />
                 </Popup>
               </CircleMarker>
             ))}
