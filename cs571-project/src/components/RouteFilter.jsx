@@ -19,7 +19,7 @@ function RouteFilter({ selectedRoute, onSelectRoute }) {
         placeholder="Filter routes..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-madison-red/40 dark:text-white placeholder-gray-400"
+        className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-madison-red/40 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
         aria-label="Filter bus routes"
       />
       <ul className="space-y-1 max-h-[420px] overflow-y-auto pr-1">

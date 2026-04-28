@@ -1,23 +1,33 @@
-import { useState, useCallback, useEffect, useRef, memo } from 'react';
+import { useCallback, useEffect, useRef, memo } from 'react';
 import {
   MapContainer as LeafletMap,
   TileLayer,
   CircleMarker,
   Marker,
   Popup,
+  useMap,
 } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {
-  getStops,
-  getRoutes,
-  fetchVehiclePositions,
-} from '../services/metroTransitApi';
+import { getStops, getRoutes, getDirectionShort } from '../services/metroTransitApi';
 import { useTheme } from '../context/ThemeContext';
 import RouteOverlay from './RouteOverlay';
+import { closestPerDirection } from '../utils/geo';
+import { useInterpolatedVehicles } from '../hooks/useInterpolatedVehicles';
 
 const MADISON_CENTER = [43.0731, -89.4012];
-const POLL_INTERVAL = 20_000;
+
+/** Pans/zooms to the user the first time their location is granted. */
+function FlyToUser({ userLocation }) {
+  const map = useMap();
+  const flown = useRef(false);
+  useEffect(() => {
+    if (!userLocation || flown.current) return;
+    map.flyTo([userLocation.lat, userLocation.lng], 16, { duration: 1.0 });
+    flown.current = true;
+  }, [userLocation, map]);
+  return null;
+}
 
 const routeColorMap = Object.fromEntries(
   getRoutes().map((r) => [r.id, r.color]),
@@ -29,7 +39,7 @@ function createBusIcon(color, label) {
     <text x="16" y="21" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" font-family="Inter,Arial">${label}</text>
   </svg>`;
   return L.divIcon({
-    html: `<img src="data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}" width="32" height="32" />`,
+    html: `<img src="data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}" width="32" height="32" alt="" role="presentation" />`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
     className: '',
@@ -46,6 +56,15 @@ const BusMarker = memo(function BusMarker({ vehicle, onClick }) {
     >
       <Popup>
         <strong>Route {vehicle.routeId}</strong>
+        {(() => {
+          const headsign = getDirectionShort(vehicle.routeId, vehicle.directionId);
+          return headsign ? (
+            <>
+              <br />
+              <em>Toward {headsign}</em>
+            </>
+          ) : null;
+        })()}
         <br />
         Vehicle #{vehicle.vehicleId}
         {vehicle.occupancy && (
@@ -66,35 +85,23 @@ const DARK_TILES =
 function MapContainer({
   selectedRoute,
   onSelectBus,
+  onSelectStop,
   tripFromStop = null,
   tripToStop = null,
   onClearRoute,
+  userLocation = null,
   className = '',
 }) {
   const { dark } = useTheme();
-  const [vehicles, setVehicles] = useState([]);
-  const intervalRef = useRef(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function poll() {
-      const data = await fetchVehiclePositions();
-      if (!cancelled && data.length > 0) setVehicles(data);
-    }
-    poll();
-    intervalRef.current = setInterval(poll, POLL_INTERVAL);
-    return () => {
-      cancelled = true;
-      clearInterval(intervalRef.current);
-    };
-  }, []);
+  const { vehicles } = useInterpolatedVehicles();
 
   const handleBusClick = useCallback(
     (vehicle) => {
       onSelectBus?.({
         route: vehicle.routeId,
+        routeId: vehicle.routeId,
+        directionId: vehicle.directionId,
         eta: null,
-        direction: '',
         vehicleId: vehicle.vehicleId,
         occupancy: vehicle.occupancy,
       });
@@ -106,9 +113,16 @@ function MapContainer({
   const showGenericStops = !selectedRoute;
   const stops = showGenericStops ? getStops() : [];
 
-  const visibleVehicles = selectedRoute
+  // When the user has shared their location AND picked a route, narrow the
+  // bus markers to the single closest bus per direction. Without one or the
+  // other, fall back to the full filtered set so the map stays useful.
+  const onRouteVehicles = selectedRoute
     ? vehicles.filter((v) => v.routeId === selectedRoute)
     : vehicles;
+  const visibleVehicles =
+    selectedRoute && userLocation
+      ? closestPerDirection(onRouteVehicles, userLocation)
+      : onRouteVehicles;
 
   return (
     <div className={`relative rounded-xl overflow-hidden shadow-lg ${className}`}>
@@ -123,12 +137,15 @@ function MapContainer({
           key={dark ? 'dark' : 'light'}
         />
 
+        <FlyToUser userLocation={userLocation} />
+
         {/* Route overlay (polyline + stops) */}
         {selectedRoute && (
           <RouteOverlay
             routeId={selectedRoute}
             fromStopId={tripFromStop}
             toStopId={tripToStop}
+            onSelectStop={onSelectStop}
           />
         )}
 
@@ -147,11 +164,39 @@ function MapContainer({
                   color: '#fff',
                   weight: 1.5,
                 }}
+                eventHandlers={{
+                  click: () => onSelectStop?.(stop),
+                }}
               >
                 <Popup>
                   <strong>{stop.name}</strong>
                   <br />
                   <small>Routes: {stop.routes.join(', ')}</small>
+                  {onSelectStop && (
+                    <>
+                      <br />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectStop(stop);
+                        }}
+                        style={{
+                          marginTop: 4,
+                          padding: '2px 6px',
+                          background: '#c5050c',
+                          color: '#fff',
+                          border: 0,
+                          borderRadius: 4,
+                          fontSize: 11,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Plan trip to here
+                      </button>
+                    </>
+                  )}
                 </Popup>
               </CircleMarker>
             ))}
@@ -160,6 +205,35 @@ function MapContainer({
         {visibleVehicles.map((v) => (
           <BusMarker key={v.vehicleId} vehicle={v} onClick={handleBusClick} />
         ))}
+
+        {/* User location: blue dot + soft accuracy halo */}
+        {userLocation && (
+          <>
+            <CircleMarker
+              center={[userLocation.lat, userLocation.lng]}
+              radius={18}
+              pathOptions={{
+                fillColor: '#2563eb',
+                fillOpacity: 0.15,
+                color: '#2563eb',
+                weight: 0,
+              }}
+              interactive={false}
+            />
+            <CircleMarker
+              center={[userLocation.lat, userLocation.lng]}
+              radius={7}
+              pathOptions={{
+                fillColor: '#2563eb',
+                fillOpacity: 1,
+                color: '#fff',
+                weight: 2,
+              }}
+            >
+              <Popup>You are here</Popup>
+            </CircleMarker>
+          </>
+        )}
       </LeafletMap>
 
       {/* Clear route button */}

@@ -57,6 +57,7 @@ const RouteOverlay = memo(function RouteOverlay({
   routeId,
   fromStopId = null,
   toStopId = null,
+  onSelectStop,
 }) {
   const shape = shapesData[routeId];
 
@@ -136,6 +137,9 @@ const RouteOverlay = memo(function RouteOverlay({
               color: isEndpoint ? routeColor : '#fff',
               weight: isEndpoint ? 3 : 1.5,
             }}
+            eventHandlers={{
+              click: () => onSelectStop?.(stop),
+            }}
           >
             <Popup>
               <div className="text-sm">
@@ -148,6 +152,28 @@ const RouteOverlay = memo(function RouteOverlay({
                 <span className="block text-xs text-gray-400 mt-0.5">
                   Stop {idx + 1} of {routeStops.length}
                 </span>
+                {onSelectStop && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectStop(stop);
+                    }}
+                    style={{
+                      marginTop: 6,
+                      padding: '2px 6px',
+                      background: '#c5050c',
+                      color: '#fff',
+                      border: 0,
+                      borderRadius: 4,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Plan trip to here
+                  </button>
+                )}
               </div>
             </Popup>
           </CircleMarker>

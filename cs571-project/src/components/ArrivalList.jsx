@@ -3,7 +3,7 @@ import RouteCard from './RouteCard';
 function ArrivalList({ arrivals, onSelect }) {
   if (!arrivals || arrivals.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
         No arrivals to display. Select a stop or route to get started.
       </div>
     );

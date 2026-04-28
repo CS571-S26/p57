@@ -12,8 +12,15 @@ export function DestinationProvider({ children }) {
     if (stop) saveRecentDestination(stop);
   }, []);
 
+  // selectRoute toggles when called with the currently-selected route, so
+  // tapping the same row in the sidebar clears the highlight. For programmatic
+  // updates that must NOT toggle (e.g. picking a trip plan), use setRoute.
   const selectRoute = useCallback((routeId) => {
     setSelectedRoute((prev) => (prev === routeId ? null : routeId));
+  }, []);
+
+  const setRoute = useCallback((routeId) => {
+    setSelectedRoute(routeId);
   }, []);
 
   const clear = useCallback(() => {
@@ -23,7 +30,7 @@ export function DestinationProvider({ children }) {
 
   return (
     <DestinationContext.Provider
-      value={{ selectedStop, selectedRoute, selectStop, selectRoute, clear }}
+      value={{ selectedStop, selectedRoute, selectStop, selectRoute, setRoute, clear }}
     >
       {children}
     </DestinationContext.Provider>

@@ -4,202 +4,515 @@
     "shortName": "28",
     "longName": "Route 28",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Whitney via Sherman",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Sherman",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "38",
     "shortName": "38",
     "longName": "Route 38",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Whitney",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Jenifer",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "55",
     "shortName": "55",
     "longName": "Route 55",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Epic Campus",
+        "directionName": "Southbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Junction",
+        "directionName": "Northbound"
+      }
+    ]
   },
   {
     "id": "60",
     "shortName": "60",
     "longName": "East Washington Extras",
     "color": "#520298",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "601-sycamore",
+        "directionName": "Outbound"
+      },
+      {
+        "id": 1,
+        "headsign": "601-e Washington",
+        "directionName": "Inbound"
+      }
+    ]
   },
   {
     "id": "61",
     "shortName": "61",
     "longName": "Pflaum Extras",
     "color": "#951F20",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "611-sycamore",
+        "directionName": "Outbound"
+      },
+      {
+        "id": 1,
+        "headsign": "611-pflaum",
+        "directionName": "Inbound"
+      }
+    ]
   },
   {
     "id": "62",
     "shortName": "62",
     "longName": "Gammon Extras",
     "color": "#025806",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "621-old Middleton",
+        "directionName": "Outbound"
+      },
+      {
+        "id": 1,
+        "headsign": "621-gammon",
+        "directionName": "Inbound"
+      }
+    ]
   },
   {
     "id": "63",
     "shortName": "63",
     "longName": "Regent Extras",
     "color": "#2E3192",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "635-greenway",
+        "directionName": "Outbound"
+      },
+      {
+        "id": 1,
+        "headsign": "635-regent",
+        "directionName": "Inbound"
+      }
+    ]
   },
   {
     "id": "64",
     "shortName": "64",
     "longName": "Regent Extras",
     "color": "#8F9092",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "641-pflaum",
+        "directionName": "Outbound"
+      },
+      {
+        "id": 1,
+        "headsign": "641-regent",
+        "directionName": "Inbound"
+      }
+    ]
   },
   {
     "id": "65",
     "shortName": "65",
     "longName": "Route 65",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Fitchburg",
+        "directionName": "Southbound"
+      },
+      {
+        "id": 1,
+        "headsign": "U.W. Hospital",
+        "directionName": "Northbound"
+      }
+    ]
   },
   {
     "id": "75",
     "shortName": "75",
     "longName": "Route 75",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Epic Campus",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Capitol Square",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "80",
     "shortName": "80",
     "longName": "Route 80",
     "color": "#2272B5",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Memorial Union",
+        "directionName": "West Loop"
+      }
+    ]
   },
   {
     "id": "81",
     "shortName": "81",
     "longName": "Route 81",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 1,
+        "headsign": "Memorial Union via Johnson/washington",
+        "directionName": "East Loop"
+      }
+    ]
   },
   {
     "id": "82",
     "shortName": "82",
     "longName": "Route 82",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Memorial Union via Observatory/breese",
+        "directionName": "West Loop"
+      }
+    ]
   },
   {
     "id": "84",
     "shortName": "84",
     "longName": "Route 84",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Eagle Heights via U.W. Campus",
+        "directionName": "West Loop"
+      }
+    ]
   },
   {
     "id": "A",
     "shortName": "A",
     "longName": "Rapid Route A",
     "color": "#EE3325",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Junction",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "1-sun Prairie",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "B",
     "shortName": "B",
     "longName": "Route B",
     "color": "#80BC00",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Fitchburg/caddis",
+        "directionName": "Southbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Northport",
+        "directionName": "Northbound"
+      }
+    ]
   },
   {
     "id": "C",
     "shortName": "C",
     "longName": "Route C",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "U.W. Hospital",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "1-sprecher",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "D",
     "shortName": "D",
     "longName": "Route D",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "1-junction",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "2-airport",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "E",
     "shortName": "E",
     "longName": "Route E",
     "color": "#2272B5",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Mckee",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Capitol Square",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "F",
     "shortName": "F",
     "longName": "Route F",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Junction via Middleton",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Segoe via Middleton",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "G",
     "shortName": "G",
     "longName": "Route G",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Hughes",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Independence",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "H",
     "shortName": "H",
     "longName": "Route H",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Westfield",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Hughes",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "J",
     "shortName": "J",
     "longName": "Route J",
     "color": "#2272B5",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Westfield",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Brooks",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "L",
     "shortName": "L",
     "longName": "Route L",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Owl Creek",
+        "directionName": "Southbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Cherokee",
+        "directionName": "Northbound"
+      }
+    ]
   },
   {
     "id": "O",
     "shortName": "O",
     "longName": "Route O",
     "color": "#2272B5",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "Hughes",
+        "directionName": "Southbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Brooks",
+        "directionName": "Northbound"
+      }
+    ]
   },
   {
     "id": "P",
     "shortName": "P",
     "longName": "Route P",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 1,
+        "headsign": "Independence via Hayes",
+        "directionName": "East Loop"
+      }
+    ]
   },
   {
     "id": "R",
     "shortName": "R",
     "longName": "Route R",
     "color": "#333366",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 0,
+        "headsign": "1-junction",
+        "directionName": "Westbound"
+      },
+      {
+        "id": 1,
+        "headsign": "Capitol Square",
+        "directionName": "Eastbound"
+      }
+    ]
   },
   {
     "id": "S",
     "shortName": "S",
     "longName": "Route S",
     "color": "#2272B5",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 1,
+        "headsign": "Sun Prairie/park and Ride",
+        "directionName": "East Loop"
+      }
+    ]
   },
   {
     "id": "W",
     "shortName": "W",
     "longName": "Route W",
     "color": "#46AAD1",
-    "textColor": "#FFFFFF"
+    "textColor": "#FFFFFF",
+    "directions": [
+      {
+        "id": 1,
+        "headsign": "Main Street/park and Ride",
+        "directionName": "East Loop"
+      }
+    ]
   }
 ]

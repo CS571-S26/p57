@@ -2,11 +2,13 @@ import { useEffect, useRef, memo } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapboxOverlay } from '@deck.gl/mapbox';
-import { IconLayer } from '@deck.gl/layers';
-import { ScenegraphLayer } from '@deck.gl/mesh-layers';
+import { IconLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
 import { getRoutes } from '../services/metroTransitApi';
 import { useTheme } from '../context/ThemeContext';
 import { useInterpolatedVehicles } from '../hooks/useInterpolatedVehicles';
+import { closestPerDirection } from '../utils/geo';
+import { BUS_MESH } from '../utils/busMesh';
 
 const MADISON_CENTER = [-89.4012, 43.0731]; // [lng, lat] for MapLibre
 // OpenFreeMap "liberty" uses the OpenMapTiles schema (source: openmaptiles,
@@ -18,15 +20,16 @@ const MADISON_CENTER = [-89.4012, 43.0731]; // [lng, lat] for MapLibre
 const LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 const DARK_STYLE = LIGHT_STYLE;
 
-// glTF model used for the 3D vehicle. Khronos sample model — single-file GLB
-// with embedded textures, reliably hosted. Swap this URL for any other glTF
-// (e.g. a custom bus model) without changing the rest of the code.
-const VEHICLE_MODEL_URL =
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMilkTruck/glTF-Binary/CesiumMilkTruck.glb';
-
 const routeColorMap = Object.fromEntries(
   getRoutes().map((r) => [r.id, r.color]),
 );
+
+/** "#c5050c" → [197, 5, 12] for deck.gl color accessors. */
+function hexToRgb(hex) {
+  const h = (hex || '#888').replace('#', '');
+  const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
 
 function makeBusIconUrl(color, label) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
@@ -88,6 +91,7 @@ function Map3D({
   selectedRoute,
   onSelectBus,
   followVehicleId = null,
+  userLocation = null,
   className = '',
   pitch = 60,
   zoom = 15,
@@ -164,26 +168,52 @@ function Map3D({
     mapRef.current.jumpTo({ center: [v.lng, v.lat] });
   }, [vehicles, followVehicleId]);
 
+  // Fly to the user's location the first time it's granted
+  const flownToUserRef = useRef(false);
+  useEffect(() => {
+    if (!mapRef.current || !userLocation || flownToUserRef.current) return;
+    mapRef.current.easeTo({
+      center: [userLocation.lng, userLocation.lat],
+      zoom: 16.5,
+      pitch: 60,
+      duration: 1000,
+    });
+    flownToUserRef.current = true;
+  }, [userLocation]);
+
   // Update deck.gl bus layers (3D scenegraph model + floating route label icon)
   useEffect(() => {
     if (!overlayRef.current) return;
-    const visible = selectedRoute
+    const onRoute = selectedRoute
       ? vehicles.filter((v) => v.routeId === selectedRoute)
       : vehicles;
+    // When the user has shared their location AND picked a route, narrow to
+    // closest-per-direction (matches the 2D behavior).
+    const visible =
+      selectedRoute && userLocation
+        ? closestPerDirection(onRoute, userLocation)
+        : onRoute;
 
-    // 3D vehicle model — oriented along its bearing
-    const vehiclesLayer = new ScenegraphLayer({
+    // 3D bus — procedural cuboid sized like a real bus, route-colored,
+    // rotated to face the GTFS-RT bearing. Mesh +X = bus front; rotate
+    // around vertical axis (roll) by (90 - bearing) so 0° points north.
+    const vehiclesLayer = new SimpleMeshLayer({
       id: 'buses-3d',
       data: visible,
-      scenegraph: VEHICLE_MODEL_URL,
+      mesh: BUS_MESH,
       pickable: true,
-      sizeScale: 8,
+      sizeScale: 4,
       _lighting: 'pbr',
+      material: { ambient: 0.5, diffuse: 0.8, shininess: 32 },
       getPosition: (d) => [d.lng, d.lat, 0],
-      // Orientation: [pitch, yaw, roll] in degrees. The model's forward axis
-      // is +X, so yaw = (90 - bearing) to align with compass heading.
-      getOrientation: (d) => [0, 90 - (d.bearing || 0), 90],
+      getOrientation: (d) => [0, 0, 90 - (d.bearing || 0)],
+      getColor: (d) => hexToRgb(routeColorMap[d.routeId] || '#666'),
       onClick: ({ object }) => object && onSelectBus?.(object),
+      updateTriggers: {
+        getPosition: visible,
+        getOrientation: visible,
+        getColor: selectedRoute,
+      },
     });
 
     // Floating route label above each bus so you can identify them at a glance
@@ -204,8 +234,41 @@ function Map3D({
       updateTriggers: { getIcon: [selectedRoute] },
     });
 
-    overlayRef.current.setProps({ layers: [vehiclesLayer, labelsLayer] });
-  }, [vehicles, selectedRoute, onSelectBus]);
+    // "You are here" — a soft halo + solid blue dot pinned at ground level.
+    const userLayers = userLocation
+      ? [
+          new ScatterplotLayer({
+            id: 'user-location-halo',
+            data: [userLocation],
+            pickable: false,
+            stroked: false,
+            filled: true,
+            radiusUnits: 'pixels',
+            getRadius: 22,
+            getFillColor: [37, 99, 235, 60],
+            getPosition: (d) => [d.lng, d.lat, 0],
+          }),
+          new ScatterplotLayer({
+            id: 'user-location-dot',
+            data: [userLocation],
+            pickable: false,
+            stroked: true,
+            filled: true,
+            radiusUnits: 'pixels',
+            getRadius: 8,
+            getFillColor: [37, 99, 235, 255],
+            getLineColor: [255, 255, 255, 255],
+            getLineWidth: 2,
+            lineWidthUnits: 'pixels',
+            getPosition: (d) => [d.lng, d.lat, 0],
+          }),
+        ]
+      : [];
+
+    overlayRef.current.setProps({
+      layers: [vehiclesLayer, labelsLayer, ...userLayers],
+    });
+  }, [vehicles, selectedRoute, onSelectBus, userLocation]);
 
   return (
     <div className={`relative rounded-xl overflow-hidden shadow-lg ${className}`}>

@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { searchStops, getRecentDestinations } from '../services/metroTransitApi';
+import { searchStops } from '../services/metroTransitApi';
 
 function SearchBar({ onSelectStop }) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [recent] = useState(() => getRecentDestinations());
   const wrapperRef = useRef(null);
 
   useEffect(() => {
@@ -50,8 +49,9 @@ function SearchBar({ onSelectStop }) {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
             placeholder="Where are you going? e.g. Memorial Union"
-            className="flex-1 px-4 py-3 text-sm bg-transparent outline-none placeholder-gray-400 dark:placeholder-gray-500 dark:text-white"
+            className="flex-1 px-4 py-3 text-sm bg-transparent outline-none placeholder-gray-500 dark:placeholder-gray-400 dark:text-white"
             aria-label="Search for a bus stop or destination"
+            id="metro-search-input"
           />
           <button
             type="submit"
@@ -80,24 +80,6 @@ function SearchBar({ onSelectStop }) {
         </ul>
       )}
 
-      {/* Recent destinations */}
-      {!showDropdown && query.length === 0 && recent.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          <span className="text-xs text-gray-400">Recent:</span>
-          {recent.map((r) => (
-            <button
-              key={r.id}
-              onClick={() => {
-                const stop = searchStops(r.name, 1)[0];
-                if (stop) handleSelect(stop);
-              }}
-              className="text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-            >
-              {r.name}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

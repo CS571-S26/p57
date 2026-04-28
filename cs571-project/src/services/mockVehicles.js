@@ -4,7 +4,10 @@ import shapesData from '../assets/shapes.json';
 // Used as a fallback when the upstream Madison Metro GTFS-RT feed is down.
 
 const BUSES_PER_ROUTE = 2;
-const SPEED_PER_POLL = 0.08; // fraction of total route traversed per 20s poll
+// Fraction of total route traversed per poll. At ~15s polls and a typical
+// 10–15 km Madison route, 0.005 ≈ 17–25 m/s, in the right ballpark for a
+// bus in city traffic. Keep this small or buses will appear to teleport.
+const SPEED_PER_POLL = 0.005;
 
 // Initialize buses: pick a handful of routes with enough coords
 const ACTIVE_ROUTES = Object.entries(shapesData)
@@ -57,6 +60,9 @@ export function getMockVehicles() {
       speed: 0,
       timestamp: Math.floor(Date.now() / 1000),
       occupancy: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+      // Map the bouncing direction (-1/+1) onto a stable GTFS-style
+      // directionId (0/1) so consumers can group buses by direction.
+      directionId: bus.direction === 1 ? 0 : 1,
       // Internal fields used by the interpolator to walk the polyline
       // instead of linearly interpolating lat/lng (which cuts corners).
       _polyline: bus.coords,

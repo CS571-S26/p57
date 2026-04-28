@@ -6,6 +6,7 @@ import { useTheme } from '../context/ThemeContext';
 const NAV_LINKS = [
   { to: '/', label: 'Live Map' },
   { to: '/routes', label: 'Routes' },
+  { to: '/data', label: 'Live Data' },
   { to: '/favorites', label: 'Saved' },
 ];
 

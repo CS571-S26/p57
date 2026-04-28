@@ -3,8 +3,10 @@ import { ThemeProvider } from './context/ThemeContext';
 import { DestinationProvider } from './context/DestinationContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import BusNavBar from './components/BusNavBar';
+import ServiceAlertsBanner from './components/ServiceAlertsBanner';
 import Home from './pages/Home';
 import RoutesGallery from './pages/RoutesGallery';
+import LiveData from './pages/LiveData';
 import Favorites from './pages/Favorites';
 import './App.css';
 
@@ -15,9 +17,11 @@ function App() {
         <FavoritesProvider>
           <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950">
             <BusNavBar />
+            <ServiceAlertsBanner />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/routes" element={<RoutesGallery />} />
+              <Route path="/data" element={<LiveData />} />
               <Route path="/favorites" element={<Favorites />} />
             </Routes>
           </div>

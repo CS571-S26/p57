@@ -4,7 +4,12 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npm uninstall *)",
-      "Bash(npm ls *)"
+      "Bash(npm ls *)",
+      "WebSearch",
+      "WebFetch(domain:www.transit.land)",
+      "Bash(mkdir -p /tmp/gtfs)",
+      "Bash(curl -fsSL -o /tmp/gtfs/mmt_gtfs.zip \"http://transitdata.cityofmadison.com/GTFS/mmt_gtfs.zip\")",
+      "Read(//tmp/gtfs/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\steph\\OneDrive\\UWMADISON\\Classes\\Spring26\\CS571\\p57\\cs571-project\\src"
